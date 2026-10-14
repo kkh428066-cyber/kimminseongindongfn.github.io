@@ -1,0 +1,76 @@
+/* Shared reading rhythm after the ZARA journey. */
+.story-chapter { scroll-margin-top:100px; }
+.story-chapter.reveal { opacity:1; transform:none; }
+.story-chapter .scene-number,.story-chapter .risk-case-number { transition:color .6s ease; }
+.story-chapter.is-reading .scene-number,.story-chapter.is-reading .risk-case-number { color:#111; }
+.story-next { display:inline-flex; align-items:center; gap:20px; padding:16px 0; text-decoration:none; }
+.story-next::after { content:'↓'; display:inline-block; transition:transform .3s; }
+.story-next:hover::after { transform:translateY(5px); }
+.reading-dock { position:fixed; z-index:45; bottom:20px; left:50%; transform:translateX(-50%); width:min(620px,calc(100% - 32px)); color:#171717; background:rgba(255,255,255,.96); border:1px solid #ddd; border-radius:14px; box-shadow:0 8px 32px #00000016; font-family:inherit; }
+.reading-dock[hidden],.reading-menu[hidden] { display:none; }
+.reading-controls { display:flex; align-items:center; gap:12px; padding:12px 16px; }
+.reading-position { font-size:11px; color:#777; font-variant-numeric:tabular-nums; white-space:nowrap; }
+.reading-current { flex:1; min-width:0; text-align:left; border:0; background:none; color:inherit; padding:4px 0; cursor:pointer; }
+.reading-current strong { display:block; font-size:13px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.reading-current small { display:block; color:#666; font-size:10px; margin-top:4px; }
+.reading-arrow { min-width:42px; min-height:42px; border:1px solid #ddd; border-radius:50%; background:#fff; color:#111; cursor:pointer; font-size:19px; }
+.reading-arrow:disabled { opacity:.3; cursor:default; }
+.reading-meter { height:3px; margin:0 16px; overflow:hidden; background:#e8e8e8; }
+.reading-meter i { display:block; height:100%; background:#111; transform:scaleX(0); transform-origin:left; }
+.reading-menu { max-height:55vh; overflow:auto; padding:12px; border-bottom:1px solid #ddd; }
+.reading-menu a { display:flex; gap:16px; padding:12px; font-size:13px; border-radius:6px; color:#555; }
+.reading-menu a[aria-current="step"] { background:#eee; color:#111; font-weight:700; }
+.reading-menu span { color:#888; font-size:11px; }
+body { padding-bottom:100px; }
+.research-bridge { background:#fafafa; color:#171717; }
+.research-bridge-copy { padding-top:42px; padding-bottom:24px; }
+.research-bridge h3 { max-width:1000px; margin:22px 0 30px; font-size:clamp(30px,4vw,56px); line-height:1.25; letter-spacing:-.045em; word-break:keep-all; }
+.research-bridge-description { max-width:820px; }
+.research-bridge-description p { font-size:clamp(16px,1.4vw,19px); line-height:1.95; color:#555; word-break:keep-all; }
+.research-bridge-description p + p { margin-top:20px; }
+.research-bridge-description strong { color:#171717; font-weight:650; }
+.research-bridge-flow { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); list-style:none; padding:0; margin:48px 0 24px; border-top:1px solid #bbb; }
+.research-bridge-flow li { position:relative; padding:24px 28px 22px 0; }
+.research-bridge-flow li:not(:last-child)::after { content:'→'; position:absolute; right:16px; top:42px; color:#777; }
+.research-bridge-flow span { display:block; color:#666; font-size:10px; letter-spacing:.08em; }
+.research-bridge-flow strong { display:block; font-size:16px; font-weight:600; margin-top:12px; line-height:1.6; word-break:keep-all; }
+.research-bridge-link { font-size:13px; color:#333; }
+.research-bridge-gradient { position:relative; height:clamp(240px,36vh,440px); background:linear-gradient(180deg,#fafafa 0%,#ededed 18%,#b0b0b0 43%,#555 67%,#252525 85%,#111 100%); isolation:isolate; }
+.research-bridge-gradient::after { content:''; position:absolute; inset:0; pointer-events:none; background:url('./transition-grain.svg') repeat; opacity:.3; mix-blend-mode:soft-light; -webkit-mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent); mask-image:linear-gradient(transparent,#000 18%,#000 82%,transparent); }
+.research-bridge + .premortem.premortem-editorial { margin-top:0; }
+/* Dark analysis pages with light outcome panels, matching the project palette. */
+.premortem.premortem-editorial { background:#111; color:#f5f5f5; --line:#555; --muted:#ccc; }
+.premortem .eyebrow,.premortem .risk-future,.premortem .risk-lead,.premortem .risk-scope,
+.premortem .risk-basis p,.premortem .risk-cause p,.premortem .risk-response-grid p,.premortem .risk-conclusion p,
+.premortem .risk-basis > span,.premortem .risk-cause > span,.premortem .risk-reading-guide { color:#ccc; }
+.premortem .risk-case-number { color:#bbb; }
+.premortem .story-chapter.is-reading .risk-case-number { color:#fff; }
+.premortem .risk-variable-grid span,.premortem .risk-decision > span,.premortem .risk-phase,
+.premortem .risk-response li::marker,.premortem .risk-reading-index a > span { color:#eee; }
+.premortem .risk-reading-guide span { color:#bbb; }
+.premortem .risk-variable-grid,.premortem .risk-case,.premortem .risk-basis,
+.premortem .risk-reading-index,.premortem .risk-reading-index a { border-color:#555; }
+.premortem .risk-variable-grid { background:#555; }
+.premortem .risk-variable-grid > div { background:#242424; }
+.premortem .risk-decision,.premortem .risk-response-grid section { border-color:#ddd; }
+.premortem .risk-review { background:#f1f1f1; color:#171717; }
+.premortem .risk-reading-index a:hover,.premortem .risk-reading-index a:focus-visible { background:#292929; }
+.premortem .risk-reading-index a[aria-current="step"] { background:#292929; }
+.project-section.dark { --muted:#ccc; --story-muted:#ccc; }
+.project-section.dark .eyebrow { color:#ccc; }
+@media(max-width:760px) {
+  .research-bridge-copy { padding-top:24px; }
+  .research-bridge-flow { grid-template-columns:1fr 1fr; gap:12px; margin-top:32px; }
+  .research-bridge-flow li { padding-right:24px; }
+  .research-bridge-flow li::after { right:2px!important; }
+  .research-bridge-flow strong { font-size:14px; }
+  .research-bridge-gradient { height:240px; }
+  .reading-dock { bottom:max(10px,env(safe-area-inset-bottom)); width:calc(100% - 20px); }
+  .reading-controls { padding:10px; gap:8px; }
+  .reading-current strong { font-size:12px; }
+  .reading-position { font-size:10px; }
+  .story-chapter { scroll-margin-top:82px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .story-chapter *, .story-next::after { transition:none!important; }
+}
