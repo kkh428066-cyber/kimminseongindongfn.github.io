@@ -348,3 +348,35 @@ setup('#premortem','.risk-case',riskTopics,'프리모텀 · 다섯 가지 리스
  story.before(details);details.append(summary,story);
  });
 })();
+
+/* Centered closing statement with a one-time cinematic reveal. */
+(() => {
+ const block=document.querySelector('#whyme .wm-closing-copy'),heading=block?.querySelector('h2');if(!heading)return;
+ const style=document.createElement('style');style.textContent=`
+ #whyme .wm-closing-copy{text-align:center;padding:100px 28px 90px;position:relative;isolation:isolate}
+ #whyme .wm-closing-copy:before{content:'';position:absolute;inset:0;z-index:-1;background:radial-gradient(ellipse at 50% 38%,#ffffff0b,transparent 65%)}
+ #whyme .wm-closing-copy h2{font-size:clamp(36px,5.4vw,80px);line-height:1.22;letter-spacing:-.055em;font-weight:800;max-width:1400px;margin:30px auto 42px;text-align:center;text-wrap:balance}
+ #whyme .closing-statement-line{display:block}
+ #whyme .closing-statement-line+.closing-statement-line{margin-top:16px}
+ #whyme .closing-statement-line:first-child{color:#bcb7b1;font-size:.76em}
+ #whyme .closing-statement-line:last-child{color:#fff}
+ #whyme .wm-closing-copy p{max-width:940px;margin-left:auto;margin-right:auto;text-align:center}
+ #whyme .closing-rule{width:90px;height:3px;background:#d6cabe;margin:0 auto 36px;transform-origin:center}
+ #whyme .closing-replay{background:transparent;border:1px solid #666;color:#ccc;border-radius:24px;padding:10px 18px;min-height:44px;margin-top:30px;cursor:pointer;font:inherit;font-size:12px}
+ #whyme .closing-replay:focus-visible{outline:2px solid white;outline-offset:4px}
+ @media(max-width:700px){#whyme .wm-closing-copy{padding:72px 20px 60px}#whyme .wm-closing-copy h2{font-size:clamp(34px,8.8vw,52px);line-height:1.3;margin:25px auto 32px}}
+ `;document.head.append(style);
+ heading.replaceChildren();
+ ['SPA 현장을 아는 실무자에서,','매장의 성장을 이끄는 영업담당자로.'].forEach(text=>{const span=document.createElement('span');span.className='closing-statement-line';span.textContent=text;heading.append(span);});
+ const rule=document.createElement('div');rule.className='closing-rule';rule.setAttribute('aria-hidden','true');heading.after(rule);
+ const button=document.createElement('button');button.type='button';button.className='closing-replay';button.textContent='다시 보기 ↻';button.setAttribute('aria-label','마지막 포부 문구 애니메이션 다시 보기');block.append(button);
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)');let animations=[];
+ function play(){
+ animations.forEach(a=>a.cancel());animations=[];if(reduced.matches)return;
+ heading.querySelectorAll('span').forEach((line,i)=>animations.push(line.animate([{opacity:0,transform:'translateY(48px) scale(.94)',filter:'blur(9px)'},{opacity:1,transform:'translateY(0) scale(1)',filter:'blur(0)'}],{duration:1100,delay:i*350,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'})));
+ animations.push(rule.animate([{transform:'scaleX(0)',opacity:0},{transform:'scaleX(1)',opacity:1}],{duration:900,delay:700,easing:'cubic-bezier(.16,1,.3,1)',fill:'backwards'}));
+ block.querySelectorAll('p').forEach((p,i)=>animations.push(p.animate([{opacity:0,transform:'translateY(16px)'},{opacity:1,transform:'translateY(0)'}],{duration:750,delay:900+i*130,fill:'backwards',easing:'ease-out'})));
+ }
+ button.addEventListener('click',play);reduced.addEventListener('change',()=>{if(reduced.matches)animations.forEach(a=>a.cancel());});
+ const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){play();observer.disconnect();}},{threshold:.3});observer.observe(heading);
+})();
