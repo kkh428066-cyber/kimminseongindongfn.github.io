@@ -13,20 +13,20 @@ style.textContent=`
 .deck-ready .premortem-opening{margin:0 0 24px;padding:0;min-height:0}
 .deck-ready .risk-future{font-size:14px;margin:0}
 .deck-ready .risk-scope{font-size:12px;line-height:1.6;margin:12px 0;padding:10px 14px}
-.compact-deck{--deck-bg:#f9f9f6;--deck-fg:#171916;--deck-line:#d9dcd3;color:var(--deck-fg);background:var(--deck-bg);border:1px solid var(--deck-line);border-radius:20px;overflow:clip;scroll-margin-top:90px}
-#premortem .compact-deck{--deck-bg:#1b201d;--deck-fg:#f6f7f1;--deck-line:#454f45}
+.compact-deck{--deck-bg:#faf9f7;--deck-fg:#252321;--deck-line:#dedad5;color:var(--deck-fg);background:var(--deck-bg);border:1px solid var(--deck-line);border-radius:20px;overflow:clip;scroll-margin-top:90px}
+#premortem .compact-deck{--deck-bg:#1d1c1b;--deck-fg:#f8f6f3;--deck-line:#504b46}
 .deck-toolbar{position:sticky;top:64px;z-index:8;background:var(--deck-bg);border-bottom:1px solid var(--deck-line);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
 .deck-label{font-size:17px;font-weight:750}.deck-hint{font-size:12px;opacity:.75;margin-top:5px}
 .deck-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .compact-deck button{font:inherit;cursor:pointer}
 .deck-controls button{min-height:44px;min-width:46px;padding:8px 14px;border:1px solid var(--deck-line);border-radius:30px;background:transparent;color:inherit}
-.deck-controls .deck-next{background:#d9f17c;color:#18200e;border-color:#d9f17c;font-weight:700}
+.deck-controls .deck-next{background:#d6cabe;color:#24201d;border-color:#d6cabe;font-weight:700}
 .deck-controls button:disabled{opacity:.35;cursor:default}
 .deck-count{font-size:13px;min-width:48px;text-align:center;font-variant-numeric:tabular-nums}
 .deck-topics{display:flex;gap:8px;padding:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--deck-line)}
 .deck-topics button{padding:9px 13px;border:1px solid var(--deck-line);border-radius:24px;background:transparent;color:inherit;font-size:13px;min-height:40px}
 .deck-topics button[aria-pressed=true]{background:var(--deck-fg);color:var(--deck-bg);border-color:var(--deck-fg)}
-.compact-deck :focus-visible{outline:3px solid #72a439;outline-offset:3px}
+.compact-deck :focus-visible{outline:3px solid #8f8176;outline-offset:3px}
 .deck-stage{overflow-anchor:none;min-height:445px;touch-action:pan-y pinch-zoom}
 .compact-deck .interview-scene,.compact-deck .risk-case{padding:24px;min-height:0;margin:0;border:0;display:block;scroll-margin-top:200px}
 .compact-deck [hidden]{display:none!important}
@@ -39,7 +39,7 @@ style.textContent=`
 .compact-deck .scene-store{font-size:13px;margin-bottom:12px}
 .compact-deck .scene-store span{font-size:12px}
 .compact-deck .scene-answer>p{font-size:16px;line-height:1.65;margin:12px 0}
-.compact-deck .scene-takeaway{padding:16px;margin:18px 0 0;gap:16px;border-radius:12px;background:#edf1e4}
+.compact-deck .scene-takeaway{padding:16px;margin:18px 0 0;gap:16px;border-radius:12px;background:#efedea}
 .compact-deck .scene-takeaway p{font-size:14px;line-height:1.65}
 .compact-deck .scene-takeaway span{font-size:11px}
 .deck-detail{margin-top:14px;border-top:1px solid var(--deck-line);padding-top:12px}
@@ -47,9 +47,9 @@ style.textContent=`
 .deck-detail .scene-evidence{margin:12px 0;padding:12px;font-size:14px}
 .deck-detail p,.deck-detail blockquote{font-size:14px!important;line-height:1.7!important}
 .risk-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.risk-summary section{padding:20px;background:#282f28;border:1px solid var(--deck-line);border-radius:14px}
-.risk-summary strong{display:block;font-size:14px;color:#d9f17c;margin-bottom:14px}
-.risk-summary p{font-size:16px;line-height:1.65;color:#f6f7f1;margin:0}
+.risk-summary section{padding:20px;background:#292623;border:1px solid var(--deck-line);border-radius:14px}
+.risk-summary strong{display:block;font-size:14px;color:#d6cabe;margin-bottom:14px}
+.risk-summary p{font-size:16px;line-height:1.65;color:#f8f6f3;margin:0}
 .compact-deck .risk-cause{padding:14px 0;margin:0 0 18px}
 .compact-deck .risk-cause p{font-size:14px;line-height:1.65}
 .compact-deck .risk-basis,.compact-deck .risk-decision,.compact-deck .risk-review{margin:18px 0;padding:18px}
@@ -273,4 +273,59 @@ setup('#premortem','.risk-case',riskTopics,'프리모텀 · 다섯 가지 리스
     });
   },{threshold:.08,rootMargin:'0px 0px -5% 0px'});
   targets.forEach(node=>observer.observe(node));
+})();
+
+/* Editorial refinement: visual roles, neutral palette and project evidence. */
+(() => {
+ const set=(q,t)=>{const e=document.querySelector(q);if(e)e.textContent=t;};
+ set('.risk-conclusion h4','문제를 발견하면, 대응과 해결 여부까지 확인합니다.');
+ set('.experience-workmap-intro h3','실제 맡은 업무들.');
+ const css=document.createElement('style');
+ css.textContent=`
+ .job-card .job-icon{display:block!important;font-size:30px;line-height:1.2;margin:12px 0;filter:none}
+ .compare-pictogram{display:block;font-size:32px;line-height:1.2;margin-bottom:18px}
+ .project-visual-intro{min-width:0;display:flex;flex-direction:column;gap:24px}
+ .project-visual-intro .project-summary{max-width:none;font-size:16px;line-height:1.75;margin:0}
+ .project-evidence{border:1px solid #5c5650;border-radius:16px;padding:26px;background:#22201e;color:#f8f6f3;margin:0}
+ .project-evidence figcaption{font-size:12px;letter-spacing:.06em;color:#d6cabe;margin-bottom:24px}
+ .response-flow{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;list-style:none;padding:0;margin:0}
+ .response-flow li{position:relative;padding:18px 10px;background:#302c28;border-radius:10px;text-align:center}
+ .response-flow li:not(:last-child):after{content:'→';position:absolute;right:-11px;top:48%;z-index:1;color:#d6cabe}
+ .response-flow span{display:block;font-size:30px;margin-bottom:16px}
+ .response-flow strong{display:block;font-size:15px;margin-bottom:8px}
+ .response-flow small{font-size:12px;line-height:1.6;color:#d5d0ca;display:block}
+ .evidence-note{display:block;font-size:11px;line-height:1.7;color:#c7c0b9;margin-top:20px}
+ .attainment-row{display:grid;grid-template-columns:82px 1fr 54px;align-items:center;gap:10px;margin:18px 0;font-size:12px}
+ .attainment-track{height:14px;background:#49433e;position:relative}
+ .attainment-track:after{content:'';position:absolute;left:83.333%;top:-5px;bottom:-5px;border-left:1px dashed #fff}
+ .attainment-fill{display:block;height:100%;background:#d6cabe}
+ .attainment-row b{text-align:right;font-variant-numeric:tabular-nums}
+ .project-story-details{margin:30px 0 48px;border-top:1px solid #7776;border-bottom:1px solid #7776;padding:18px 0}
+ .project-story-details>summary{cursor:pointer;font-size:15px;font-weight:650;min-height:28px}
+ .project-story-details .operation-story{margin-top:28px}
+ @media(max-width:640px){.project-evidence{padding:18px}.response-flow{gap:9px}.response-flow li{padding:16px 6px}.response-flow strong{font-size:13px}.response-flow small{font-size:11px}.attainment-row{grid-template-columns:76px 1fr 48px;gap:8px}.job-card .job-icon{font-size:26px;margin:8px 0}}
+ `;
+ document.head.append(css);
+ document.querySelectorAll('.job-icon').forEach(e=>e.setAttribute('aria-hidden','true'));
+ document.querySelectorAll('.compare-item').forEach((e,i)=>{
+   const icon=document.createElement('span');icon.className='compare-pictogram';icon.setAttribute('aria-hidden','true');
+   icon.textContent=['👩‍👧','✨','🏬','👥','🤝','🔁'][i%6];e.prepend(icon);
+ });
+ const make=(id,copy,html)=>{
+  const head=document.querySelector(id+' .project-topline'),p=head?.querySelector('.project-summary');if(!p)return;
+  p.textContent=copy;const box=document.createElement('div');box.className='project-visual-intro';p.before(box);box.append(p);
+  const fig=document.createElement('figure');fig.className='project-evidence';fig.innerHTML=html;box.append(fig);
+ };
+ make('#project02','품절로 생기는 판매 공백. 재고 확인부터 대체 상품 판단까지 연결하는 매장 운영 시뮬레이터를 만들었습니다.',
+ '<figcaption>판매 공백에 대응하는 세 단계</figcaption><ol class="response-flow"><li><span aria-hidden="true">📦</span><strong>품절 확인</strong><small>진열·재고 상태 파악</small></li><li><span aria-hidden="true">🔎</span><strong>대안 비교</strong><small>판매 가능한 상품 검토</small></li><li><span aria-hidden="true">👗</span><strong>진열 복구</strong><small>보충·대체 상품 교체</small></li></ol><small class="evidence-note">구현한 대응 흐름 · 가상 데이터 기반 시연<br>판매 공백 감소 효과를 실제 매장에서 검증한 결과는 아닙니다.</small>');
+ const rows=[['파르나스몰',105.5],['엔터식스천호',85.0],['양재직영점',89.2],['선릉직영점',90.0]];
+ make('#project03','매출 성장과 목표 달성은 다릅니다. 매장·상품별 신호를 찾아 현장 질문과 월별 보고서로 연결했습니다.',
+ '<figcaption>매장별 목표 달성률 · 2026.09</figcaption>'+rows.map(([name,v])=>'<div class="attainment-row"><span>'+name+'</span><div class="attainment-track" aria-hidden="true"><i class="attainment-fill" style="width:'+(v/120*100)+'%"></i></div><b>'+v.toFixed(1)+'%</b></div>').join('')+'<small class="evidence-note">점선: 목표 100% · 공통 축: 0–120%<br>아래 월별 보고서의 가상 데이터 · 실제 매장 실적이 아닙니다.</small>');
+ set('#project04 .project-summary','브랜드 분석을 타깃·상품·고객 경험으로 연결한 27SS 기획, FRUITS LAYERED. 한국의류학회 상품기획 컨테스트 입선작입니다.');
+ ['#project02','#project03','#project04'].forEach(id=>{
+ const story=document.querySelector(id+' .operation-story');if(!story)return;
+ const details=document.createElement('details'),summary=document.createElement('summary');
+ details.className='project-story-details';summary.textContent='기획 배경과 제작 과정 자세히 보기';
+ story.before(details);details.append(summary,story);
+ });
 })();
