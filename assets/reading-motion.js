@@ -1,3 +1,11 @@
+/* Interview correction confirmed by the interviewer; Rodeo transcript 00:08–00:09 says visits are rare. */
+(() => {
+ const answers=document.querySelectorAll('#interview-hq .scene-answer');
+ const g=answers[0]?.querySelector(':scope > p');
+ if(g)g.textContent='판매 직원 기준으로 본사와의 주요 소통은 매니저가 담당한다고 답했습니다. 인터뷰 확인 내용에 따르면 본사 영업 담당자는 대전 갤러리아 매장을 방문하지 않습니다.';
+ const r=answers[1]?.querySelector(':scope > p');
+ if(r)r.textContent='인터뷰 확인 내용에 따르면 본사 영업 담당자는 대전 로데오 매장을 방문하지 않습니다. 본사 영업부·영업MD와는 수시로 통화하며 매출뿐 아니라 직원 운영, 매장 환경 변화와 상품 반응을 공유한다고 설명했습니다.';
+})();
 /* Compact interview and pre-mortem readers. */
 (() => {
 'use strict';
@@ -74,7 +82,7 @@ document.querySelectorAll('.interview-intro h3 br,.premortem-opening h3 br,.scen
 const topics=['👥 고객','📞 본사 소통','📦 상품 공급','🚚 재고 이동','👗 진열 기준'];
 const answers=[
 ['50–70대 중심 · 40대와 모녀 고객도 방문','40–60대 중심 · 단골 고객 비중이 높음'],
-['매니저가 본사 소통 담당 · 영업 담당자 방문','영업·영업MD와 수시 소통 · 상품 반응과 매장 상황 공유'],
+['매니저가 본사 소통 담당 · 대전 매장 방문 없음','대전 매장 방문 없음 · 영업·영업MD와 수시 통화'],
 ['시즌에 맞춰 입고 · 부족하면 타 매장 재고 활용','컬러·사이즈 분산 공급 · 인기 상품 리오더 논의'],
 ['매장 간 수평 이동 · 입출고 내역 전산 반영','매장별 판매 차이에 맞춰 상품 로테이션'],
 ['매니저 중심으로 매장 디스플레이 운영','본사 참고 가이드 + 현장 스타일링 자율성']
