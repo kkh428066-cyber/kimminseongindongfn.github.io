@@ -5,7 +5,7 @@
  if(decision)decision.textContent='잘 팔리는 컬러·사이즈의 재고가 부족해지는지 확인합니다. 고객이 찾는 상품이 없으면 다른 매장에서 받을 수 있는지와 언제 도착하는지를 확인합니다.';
  const follow=root.querySelector('#risk-stockout .risk-response li:last-child p');
  if(follow)follow.textContent='같은 상품을 찾는 고객이 계속 있는지 매장에 확인하고, 본사에 추가 입고가 가능한지 문의합니다. 입고 일정이 정해지면 매장에 전달하고 실제 도착 여부를 확인합니다.';
- const substitutions=[['SKU·컬러·사이즈별','상품·컬러·사이즈별'],['SKU·옵션','상품·컬러·사이즈'],['이동 경제성','이동 시 확인할 점'],['체류 기간','팔리지 않고 남아 있는 기간'],['체류 재고','팔리지 않고 남은 재고'],['소요일','걸리는 시간'],['구매 전환','방문 고객의 실제 구매'],['옵션 가용성','컬러·사이즈별 재고 유무'],['옵션 부재','원하는 컬러·사이즈 부족'],['미충족','제공하지 못한'],['집행 비용','사용한 비용'],['상신합니다','본사에 보고합니다']];
+ const substitutions=[['SKU·컬러·사이즈별','상품·컬러·사이즈별'],['SKU·옵션','상품·컬러·사이즈'],['이동 경제성','이동 시 확인할 점'],['체류 기간','팔리지 않고 남아 있는 기간'],['체류 재고','팔리지 않고 남은 재고'],['소요일','걸리는 시간'],['구매 전환','구매로 이어지는 비율'],['옵션 가용성','컬러·사이즈별 재고 유무'],['옵션 부재','원하는 컬러·사이즈 부족'],['집행 비용','사용한 비용'],['상신합니다','본사에 보고합니다']];
  const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
  while(node=walker.nextNode()){let t=node.nodeValue;substitutions.forEach(([a,b])=>t=t.split(a).join(b));node.nodeValue=t;}
 })();
