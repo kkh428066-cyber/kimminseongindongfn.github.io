@@ -1,3 +1,14 @@
+/* Keep proposed actions in plain language the applicant can explain. */
+(() => {
+ const root=document.querySelector('#premortem');if(!root)return;
+ const decision=root.querySelector('#risk-stockout .risk-decision p');
+ if(decision)decision.textContent='잘 팔리는 컬러·사이즈의 재고가 부족해지는지 확인합니다. 고객이 찾는 상품이 없으면 다른 매장에서 받을 수 있는지와 언제 도착하는지를 확인합니다.';
+ const follow=root.querySelector('#risk-stockout .risk-response li:last-child p');
+ if(follow)follow.textContent='같은 상품을 찾는 고객이 계속 있는지 매장에 확인하고, 본사에 추가 입고가 가능한지 문의합니다. 입고 일정이 정해지면 매장에 전달하고 실제 도착 여부를 확인합니다.';
+ const substitutions=[['SKU·컬러·사이즈별','상품·컬러·사이즈별'],['SKU·옵션','상품·컬러·사이즈'],['이동 경제성','이동 시 확인할 점'],['체류 기간','팔리지 않고 남아 있는 기간'],['체류 재고','팔리지 않고 남은 재고'],['소요일','걸리는 시간'],['구매 전환','방문 고객의 실제 구매'],['옵션 가용성','컬러·사이즈별 재고 유무'],['옵션 부재','원하는 컬러·사이즈 부족'],['미충족','제공하지 못한'],['집행 비용','사용한 비용'],['상신합니다','본사에 보고합니다']];
+ const walker=document.createTreeWalker(root,NodeFilter.SHOW_TEXT);let node;
+ while(node=walker.nextNode()){let t=node.nodeValue;substitutions.forEach(([a,b])=>t=t.split(a).join(b));node.nodeValue=t;}
+})();
 /* Interview correction confirmed by the interviewer; Rodeo transcript 00:08–00:09 says visits are rare. */
 (() => {
  const answers=document.querySelectorAll('#interview-hq .scene-answer');
@@ -89,7 +100,7 @@ const answers=[
 ];
 const riskTopics=['📦 옵션 결품','🎯 채널 차이','📡 정보 지연','⚖️ 재고 편중','🌱 신규 고객'];
 const riskSummary=[
-['재고 커버일이 보충 소요일보다 짧아지는지 확인','옵션별 판매·문의와 이동 가능한 재고를 사전 점검','실재고 확인 → 이동·대체 상품 협의 → 리오더 검토'],
+['잘 팔리는 컬러·사이즈의 재고가 부족해지는지 확인','옵션별 판매·문의와 이동 가능한 재고를 사전 점검','실재고 확인 → 이동·대체 상품 협의 → 리오더 검토'],
 ['방문은 유지되는데 구매 전환이 떨어지는지 확인','매장별 구매·미구매 사유 기록, 추천 방식 소규모 시험','이탈 지점 확인 → 한 요소 변경 → 같은 조건으로 비교'],
 ['같은 문제가 반복되거나 담당자·확인일이 없는지 확인','변화·영향·지원·담당·확인일을 짧게 공유','사실 확인 → 담당·기한 확정 → 현장에서 해결 확인'],
 ['같은 옵션이 한 매장엔 남고 다른 매장엔 부족한지 확인','옵션별 판매·재고 비교, 이동 승인·입고 절차 정리','양쪽 실재고 확인 → 판매 가능성 비교 → 이동 후 판매 추적'],
