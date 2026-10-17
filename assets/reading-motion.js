@@ -1,3 +1,153 @@
+/* Compact interview and pre-mortem readers. */
+(() => {
+'use strict';
+const style=document.createElement('style');
+style.textContent=`
+#interviewStory.deck-ready{padding:48px 0;margin-top:48px}
+.deck-ready .interview-intro{padding-top:0;padding-bottom:20px;min-height:0}
+.deck-ready .interview-intro h3,.deck-ready .premortem-opening h3{font-size:clamp(28px,3vw,42px);margin:10px 0;line-height:1.2}
+.deck-ready .interview-intro h3 br,.deck-ready .premortem-opening h3 br{display:none}
+.deck-ready .interview-intro p,.deck-ready .risk-lead{font-size:15px;line-height:1.65;margin:10px 0;max-width:800px}
+.deck-ready .story-scroll-hint,.deck-ready .interview-progress,.deck-ready .scene-next,.deck-ready .risk-reading-index,.deck-ready .risk-reading-guide{display:none!important}
+#premortem.deck-ready{padding:48px 0}
+.deck-ready .premortem-opening{margin:0 0 24px;padding:0;min-height:0}
+.deck-ready .risk-future{font-size:14px;margin:0}
+.deck-ready .risk-scope{font-size:12px;line-height:1.6;margin:12px 0;padding:10px 14px}
+.compact-deck{--deck-bg:#f9f9f6;--deck-fg:#171916;--deck-line:#d9dcd3;color:var(--deck-fg);background:var(--deck-bg);border:1px solid var(--deck-line);border-radius:20px;overflow:clip;scroll-margin-top:90px}
+#premortem .compact-deck{--deck-bg:#1b201d;--deck-fg:#f6f7f1;--deck-line:#454f45}
+.deck-toolbar{position:sticky;top:64px;z-index:8;background:var(--deck-bg);border-bottom:1px solid var(--deck-line);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.deck-label{font-size:17px;font-weight:750}.deck-hint{font-size:12px;opacity:.75;margin-top:5px}
+.deck-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.compact-deck button{font:inherit;cursor:pointer}
+.deck-controls button{min-height:44px;min-width:46px;padding:8px 14px;border:1px solid var(--deck-line);border-radius:30px;background:transparent;color:inherit}
+.deck-controls .deck-next{background:#d9f17c;color:#18200e;border-color:#d9f17c;font-weight:700}
+.deck-controls button:disabled{opacity:.35;cursor:default}
+.deck-count{font-size:13px;min-width:48px;text-align:center;font-variant-numeric:tabular-nums}
+.deck-topics{display:flex;gap:8px;padding:14px 24px;flex-wrap:wrap;border-bottom:1px solid var(--deck-line)}
+.deck-topics button{padding:9px 13px;border:1px solid var(--deck-line);border-radius:24px;background:transparent;color:inherit;font-size:13px;min-height:40px}
+.deck-topics button[aria-pressed=true]{background:var(--deck-fg);color:var(--deck-bg);border-color:var(--deck-fg)}
+.compact-deck :focus-visible{outline:3px solid #72a439;outline-offset:3px}
+.deck-stage{overflow-anchor:none;min-height:445px;touch-action:pan-y pinch-zoom}
+.compact-deck .interview-scene,.compact-deck .risk-case{padding:24px;min-height:0;margin:0;border:0;display:block;scroll-margin-top:200px}
+.compact-deck [hidden]{display:none!important}
+.compact-deck .scene-heading,.compact-deck .risk-case-heading{display:flex;gap:18px;align-items:center;margin:0 0 20px;padding:0}
+.compact-deck .scene-number,.compact-deck .risk-case-number{font-size:34px;color:inherit;min-width:48px;line-height:1}
+.compact-deck .scene-heading h4,.compact-deck .risk-case h4{font-size:clamp(22px,2.6vw,32px);margin:6px 0 0;line-height:1.35}
+.compact-deck .scene-heading h4 br{display:none}
+.compact-deck .scene-answers{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.compact-deck .scene-answer{padding:20px;border:1px solid var(--deck-line);border-radius:14px;background:#fff}
+.compact-deck .scene-store{font-size:13px;margin-bottom:12px}
+.compact-deck .scene-store span{font-size:12px}
+.compact-deck .scene-answer>p{font-size:16px;line-height:1.65;margin:12px 0}
+.compact-deck .scene-takeaway{padding:16px;margin:18px 0 0;gap:16px;border-radius:12px;background:#edf1e4}
+.compact-deck .scene-takeaway p{font-size:14px;line-height:1.65}
+.compact-deck .scene-takeaway span{font-size:11px}
+.deck-detail{margin-top:14px;border-top:1px solid var(--deck-line);padding-top:12px}
+.deck-detail summary{font-size:13px;font-weight:650;cursor:pointer;min-height:32px}
+.deck-detail .scene-evidence{margin:12px 0;padding:12px;font-size:14px}
+.deck-detail p,.deck-detail blockquote{font-size:14px!important;line-height:1.7!important}
+.risk-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.risk-summary section{padding:20px;background:#282f28;border:1px solid var(--deck-line);border-radius:14px}
+.risk-summary strong{display:block;font-size:14px;color:#d9f17c;margin-bottom:14px}
+.risk-summary p{font-size:16px;line-height:1.65;color:#f6f7f1;margin:0}
+.compact-deck .risk-cause{padding:14px 0;margin:0 0 18px}
+.compact-deck .risk-cause p{font-size:14px;line-height:1.65}
+.compact-deck .risk-basis,.compact-deck .risk-decision,.compact-deck .risk-review{margin:18px 0;padding:18px}
+.compact-deck .risk-response-grid{margin:18px 0}
+.compact-deck .risk-response-grid>section{padding:20px}
+.deck-end{display:block;border-top:1px solid var(--deck-line);padding:13px 24px;font-size:12px;opacity:.8}
+@media(max-width:640px){
+.deck-toolbar{padding:14px;top:56px;flex-wrap:wrap;gap:10px}.deck-label{font-size:15px}.deck-controls{margin-left:auto}.deck-hint{font-size:11px}
+.deck-topics{padding:10px 14px;gap:6px}.deck-topics button{font-size:12px;padding:7px 10px}
+.compact-deck .interview-scene,.compact-deck .risk-case{padding:18px 14px}
+.compact-deck .scene-answers,.risk-summary{grid-template-columns:1fr;gap:10px}
+.compact-deck .scene-answer,.risk-summary section{padding:14px}
+.compact-deck .scene-answer>p,.risk-summary p{font-size:14px;margin:7px 0}
+.compact-deck .scene-takeaway{display:block}.compact-deck .scene-takeaway span{display:block;margin-bottom:8px}
+.compact-deck .scene-heading,.compact-deck .risk-case-heading{gap:12px}
+.deck-stage{min-height:590px}.risk-summary strong{margin-bottom:6px}
+}
+@media print{.compact-deck [hidden]{display:block!important}.deck-toolbar,.deck-topics{display:none}.deck-stage{min-height:0}}
+`;
+document.head.append(style);
+document.querySelectorAll('.interview-intro h3 br,.premortem-opening h3 br,.scene-heading h4 br').forEach(br=>br.replaceWith(document.createTextNode(' '))); 
+const topics=['👥 고객','📞 본사 소통','📦 상품 공급','🚚 재고 이동','👗 진열 기준'];
+const answers=[
+['50–70대 중심 · 40대와 모녀 고객도 방문','40–60대 중심 · 단골 고객 비중이 높음'],
+['매니저가 본사 소통 담당 · 영업 담당자 방문','영업·영업MD와 수시 소통 · 상품 반응과 매장 상황 공유'],
+['시즌에 맞춰 입고 · 부족하면 타 매장 재고 활용','컬러·사이즈 분산 공급 · 인기 상품 리오더 논의'],
+['매장 간 수평 이동 · 입출고 내역 전산 반영','매장별 판매 차이에 맞춰 상품 로테이션'],
+['매니저 중심으로 매장 디스플레이 운영','본사 참고 가이드 + 현장 스타일링 자율성']
+];
+const riskTopics=['📦 옵션 결품','🎯 채널 차이','📡 정보 지연','⚖️ 재고 편중','🌱 신규 고객'];
+const riskSummary=[
+['재고 커버일이 보충 소요일보다 짧아지는지 확인','옵션별 판매·문의와 이동 가능한 재고를 사전 점검','실재고 확인 → 이동·대체 상품 협의 → 리오더 검토'],
+['방문은 유지되는데 구매 전환이 떨어지는지 확인','매장별 구매·미구매 사유 기록, 추천 방식 소규모 시험','이탈 지점 확인 → 한 요소 변경 → 같은 조건으로 비교'],
+['같은 문제가 반복되거나 담당자·확인일이 없는지 확인','변화·영향·지원·담당·확인일을 짧게 공유','사실 확인 → 담당·기한 확정 → 현장에서 해결 확인'],
+['같은 옵션이 한 매장엔 남고 다른 매장엔 부족한지 확인','옵션별 판매·재고 비교, 이동 승인·입고 절차 정리','양쪽 실재고 확인 → 판매 가능성 비교 → 이동 후 판매 추적'],
+['신규 고객 비중과 실제 구매자 수를 함께 확인','신규·기존 고객과 유입 경로 기록, 작은 접점 실험','유입·전환 원인 구분 → 접점 보완 → 재방문·비용 확인']
+];
+function disclosure(label,nodes){
+ const d=document.createElement('details'),s=document.createElement('summary');d.className='deck-detail';s.textContent=label;d.append(s,...nodes);return d;
+}
+document.querySelectorAll('.interview-scene').forEach((slide,i)=>{
+ slide.querySelector('.scene-number').textContent=topics[i].split(' ')[0];
+ slide.querySelectorAll('.scene-answer').forEach((answer,j)=>{
+  const original=answer.querySelector(':scope > p'),evidence=answer.querySelector('.scene-evidence');
+  const summary=document.createElement('p');summary.textContent=answers[i][j];original.before(summary);
+  answer.append(disclosure('인터뷰 원문·근거 펼치기',[original,evidence].filter(Boolean)));
+ });
+ slide.querySelector('.scene-next')?.remove();
+});
+document.querySelectorAll('.risk-case').forEach((slide,i)=>{
+ slide.querySelector('.risk-case-number').textContent=riskTopics[i].split(' ')[0];
+ const summary=document.createElement('div');summary.className='risk-summary';
+ ['🔎 조기 신호','🛡️ 사전 예방','⚡ 발생 시 대응'].forEach((label,j)=>{
+ const section=document.createElement('section'),h=document.createElement('strong'),p=document.createElement('p');
+ h.textContent=label;p.textContent=riskSummary[i][j];section.append(h,p);summary.append(section);
+ });
+ const nodes=Array.from(slide.children).filter(n=>!n.matches('.risk-case-heading,.risk-cause'));
+ slide.append(summary,disclosure('현장 근거·변수·상세 대응 계획 펼치기',nodes));
+});
+function setup(rootSelector,slideSelector,labels,title){
+ const root=document.querySelector(rootSelector),slides=Array.from(root?.querySelectorAll(slideSelector)||[]);
+ if(!root||!slides.length)return;
+ root.classList.add('deck-ready');
+ const deck=document.createElement('section');deck.className='compact-deck';deck.setAttribute('aria-label',title+' 슬라이드');deck.setAttribute('aria-roledescription','캐러셀');
+ const toolbar=document.createElement('div');toolbar.className='deck-toolbar';
+ toolbar.innerHTML='<div><div class="deck-label"></div><div class="deck-hint">화살표로 넘기거나 좌우로 스와이프하세요</div></div><div class="deck-controls"><button type="button" class="deck-prev">←</button><span class="deck-count" aria-live="polite" aria-atomic="true"></span><button type="button" class="deck-next">다음 →</button></div>';
+ toolbar.querySelector('.deck-label').textContent=title;
+ const prev=toolbar.querySelector('.deck-prev'),next=toolbar.querySelector('.deck-next'),count=toolbar.querySelector('.deck-count');
+ prev.setAttribute('aria-label',title+' 이전 슬라이드');next.setAttribute('aria-label',title+' 다음 슬라이드');
+ const nav=document.createElement('nav');nav.className='deck-topics';nav.setAttribute('aria-label',title+' 주제 선택');
+ const stage=document.createElement('div');stage.className='deck-stage';stage.id=root.id+'-slides';stage.tabIndex=0;stage.setAttribute('aria-label',title+' 내용. 좌우 방향키로 이동');
+ prev.setAttribute('aria-controls',stage.id);next.setAttribute('aria-controls',stage.id);
+ const end=document.createElement('span');end.className='deck-end';
+ slides[0].before(deck);deck.append(toolbar,nav,stage,end);stage.append(...slides);
+ let active=0;
+ const buttons=labels.map((label,i)=>{const b=document.createElement('button');b.type='button';b.textContent=label;b.setAttribute('aria-controls',slides[i].id);b.addEventListener('click',()=>show(i));nav.append(b);return b;});
+ function show(index,animate=true){
+ const old=active, scrollBefore=window.scrollY;active=Math.max(0,Math.min(slides.length-1,index));
+ slides.forEach((slide,i)=>{slide.hidden=i!==active;slide.setAttribute('aria-label',(i+1)+' / '+slides.length+' · '+labels[i]);buttons[i].setAttribute('aria-pressed',String(i===active));if(i!==active)slide.querySelectorAll('details').forEach(d=>d.open=false);});
+ prev.disabled=active===0;next.disabled=active===slides.length-1;
+ count.textContent=String(active+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+ end.textContent=active===slides.length-1?'마지막 카드입니다 · 아래에서 다음 섹션을 이어 보세요':'다음 카드 · '+labels[active+1]+' →';
+ if(animate&&old!==active)window.scrollTo({top:scrollBefore,behavior:'instant'});
+ if(animate&&old!==active&&!matchMedia('(prefers-reduced-motion: reduce)').matches)slides[active].animate([{opacity:.3,transform:'translateX('+((active>old?1:-1)*22)+'px)'},{opacity:1,transform:'translateX(0)'}],{duration:240,easing:'ease-out'});
+ }
+ prev.addEventListener('click',()=>show(active-1));next.addEventListener('click',()=>show(active+1));
+ deck.addEventListener('keydown',e=>{if(e.target.closest('details,input,textarea,select'))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){e.preventDefault();show(active+(e.key==='ArrowRight'?1:-1));} });
+ let start=null;
+ stage.addEventListener('touchstart',e=>{start=e.touches.length===1?{x:e.touches[0].clientX,y:e.touches[0].clientY}:null;},{passive:true});
+ stage.addEventListener('touchcancel',()=>start=null,{passive:true});
+ stage.addEventListener('touchend',e=>{if(!start||!e.changedTouches.length)return;const dx=e.changedTouches[0].clientX-start.x,dy=e.changedTouches[0].clientY-start.y;start=null;if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5)show(active+(dx<0?1:-1));},{passive:true});
+ function hash(){const i=slides.findIndex(s=>'#'+s.id===location.hash);if(i>=0){show(i,false);deck.scrollIntoView({block:'start'});}}
+ addEventListener('hashchange',hash);show(0,false);if(slides.some(s=>'#'+s.id===location.hash))requestAnimationFrame(hash);
+}
+setup('#interviewStory','.interview-scene',topics,'인터뷰 · 다섯 가지 질문');
+setup('#premortem','.risk-case',riskTopics,'프리모텀 · 다섯 가지 리스크');
+})();
+
 (() => {
   'use strict';
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -7,12 +157,10 @@
     ['.field-hero','01 · 영업의 시선으로 매장 방문'],
     ['.field-visit','01 · 두 매장의 현장 기록'],
     ['.compare-section','01 · 같은 브랜드, 다른 고객'],
-    ['.interview-intro','인터뷰 · 다섯 가지 질문'],
-    ...Array.from(document.querySelectorAll('.interview-scene'), (el,i) => ['#'+el.id,`인터뷰 ${i+1} · ${['고객','본사 소통','상품 공급','재고 이동','진열 기준'][i]}`]),
+    ['#interviewStory','인터뷰 · 다섯 가지 질문'],
     ['.findings','04 · 현장에서 확인한 세 가지'],
     ['#researchToAction','현장 조사에서 예방·대응 보고서로'],
-    ['.premortem-opening','프리모텀 · 가정에서 대응으로'],
-    ...Array.from(document.querySelectorAll('.risk-case'), (el,i) => ['#'+el.id,`리스크 ${i+1} · ${['결품','채널별 판매 방식','정보 전달','재고 불균형','신규 고객'][i]}`]),
+    ['#premortem','프리모텀 · 가정에서 대응으로'],
     ['#project02','02 · Inventory Response Simulator'],
     ['#project03','03 · Sales & Inventory Dashboard'],
     ['#monthlyReport','03 · 월별 매장 운영 보고서'],
@@ -88,7 +236,7 @@
     meter.setAttribute('aria-valuenow',String(Math.round(progress*100)));
     dock.querySelector('.reading-position').textContent=`${String(current+1).padStart(2,'0')} / ${chapters.length}`;
     toggle.querySelector('strong').textContent=chapters[current].label;
-    const phases=chapters[current].element.querySelectorAll('.risk-basis,.risk-variable-grid,.risk-decision,.risk-response-grid,.risk-review');
+    const phases=chapters[current].element.classList.contains('deck-ready')?[]:chapters[current].element.querySelectorAll('.risk-basis,.risk-variable-grid,.risk-decision,.risk-response-grid,.risk-review');
     let phase='목차 열기';
     phases.forEach((el,i)=>{if(el.getBoundingClientRect().top<innerHeight*.5)phase=['현장 근거','변수 확인','판단 기준','사전 예방 · 발생 시 대응','결과 확인'][i]+' · 목차 열기';});
     toggle.querySelector('small').textContent=phase;
@@ -112,7 +260,7 @@
     '.risk-case-heading','.risk-basis','.risk-cause','.risk-variable-grid > div','.risk-decision',
     '.risk-response-grid > section','.risk-review','.risk-conclusion','.project-topline',
     '.operation-story > section','.operation-learning','.report-metrics > *','.report-findings > *'];
-  const targets=Array.from(document.querySelectorAll(selectors.join(',')));
+  const targets=Array.from(document.querySelectorAll(selectors.join(','))).filter(node=>!node.closest('.deck-ready'));
   const observer=new IntersectionObserver(entries=>{
     entries.forEach(entry=>{
       if(!entry.isIntersecting)return;
