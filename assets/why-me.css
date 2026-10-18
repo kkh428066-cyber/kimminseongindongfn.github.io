@@ -76,3 +76,6 @@
   #whyme .wm-context {font-size:14px;}
   #whyme .wm-context br {display:none;}
 }
+
+/* Center the final pledge block as well as its text. */
+#whyme .wm-close .wm-closing-copy p.wm-closing-pledge{display:block;width:100%;max-width:940px;margin:28px auto 0;text-align:center;}
