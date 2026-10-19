@@ -380,3 +380,29 @@ setup('#premortem','.risk-case',riskTopics,'프리모텀 · 다섯 가지 리스
  button.addEventListener('click',play);reduced.addEventListener('change',()=>{if(reduced.matches)animations.forEach(a=>a.cancel());});
  const observer=new IntersectionObserver(entries=>{if(entries.some(e=>e.isIntersecting)){play();observer.disconnect();}},{threshold:.3});observer.observe(heading);
 })();
+
+/* Clearly identify the dashboard and report as a synthetic-data exercise. */
+(() => {
+ const root=document.querySelector('#project03');if(!root)return;
+ const style=document.createElement('style');style.textContent=`
+ #project03 .demo-data-notice{padding:20px 24px;margin:18px 0 24px;border:1px solid #b8aea3;border-left:5px solid #6d6054;background:#f2eee8;color:#24201d;text-align:left;border-radius:8px}
+ #project03 .demo-data-notice strong{display:block;font-size:18px;line-height:1.5;letter-spacing:-.025em}
+ #project03 .demo-data-notice p{font-size:14px;line-height:1.7;color:#51483f;margin:8px 0 0;max-width:none}
+ #project03 .demo-data-badge{display:inline-block;font-size:12px;font-weight:750;line-height:1.5;padding:6px 10px;background:#e9e3dc;color:#302820;border:1px solid #b8aea3;border-radius:5px;margin-bottom:14px;letter-spacing:0}
+ #project03 .embedded-project-heading{flex-wrap:wrap}
+ @media(max-width:640px){#project03 .demo-data-notice{padding:16px}#project03 .demo-data-notice strong{font-size:16px}}
+ `;document.head.append(style);
+ function notice(before,title,copy){if(!before)return;const n=document.createElement('aside');n.className='demo-data-notice';n.setAttribute('aria-label','가상 데이터 안내');const h=document.createElement('strong'),p=document.createElement('p');h.textContent=title;p.textContent=copy;n.append(h,p);before.before(n);}
+ notice(root.querySelector('.project-topline'),'가상 데이터로 만든 매장 분석 프로젝트','매출·목표·상품·재고 수치는 분석 연습을 위해 만든 가상 데이터입니다. 실제 매장 실적이나 회사 내부 자료가 아닙니다.');
+ const chart=root.querySelector('.project-evidence figcaption');if(chart)chart.textContent='가상 데이터 예시 · 매장별 목표 달성률 · 2026.09';
+ const frame=root.querySelector('#retailDashboardEmbed');
+ notice(frame,'이 대시보드의 매출·재고 수치는 모두 가상입니다.','매장명은 화면 구성에 사용했으며, 표시된 수치와 매장명은 실제 영업 성과를 나타내지 않습니다. 날씨는 외부 기상 자료를 별도로 사용합니다.');
+ const report=root.querySelector('#monthlyReport');
+ notice(report?.querySelector(':scope > :first-child'),'가상 데이터 분석 보고서 · 연습용 초안','아래 실적 비교와 대응 제안은 위 대시보드의 가상 수치를 바탕으로 작성했습니다. 실제 매장의 성과 평가나 실행 결과가 아닙니다.');
+ if(frame){
+  const doc=new DOMParser().parseFromString(frame.srcdoc,'text/html');
+  const banner=doc.createElement('div');banner.setAttribute('role','note');banner.textContent='가상 데이터 시연 · 매출·목표·상품·재고는 실제 매장 자료가 아닙니다.';
+  banner.setAttribute('style','position:sticky;top:0;z-index:100;background:#eee8df;color:#302820;border-bottom:2px solid #8b7c6b;padding:12px 18px;font:700 14px/1.6 sans-serif;text-align:center');
+  doc.body.prepend(banner);frame.srcdoc='<!doctype html>'+doc.documentElement.outerHTML;
+ }
+})();
