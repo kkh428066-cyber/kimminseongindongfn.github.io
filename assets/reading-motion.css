@@ -74,3 +74,54 @@ body { padding-bottom:100px; }
 @media(prefers-reduced-motion:reduce) {
   .story-chapter *, .story-next::after { transition:none!important; }
 }
+
+/* Discoverable planning/process disclosures for the two interactive projects. */
+:is(#project02,#project03) .project-story-details {
+  margin:32px 0 48px; padding:0; border:1px solid #b8b8b8;
+  border-radius:12px; background:#f4f4f2; color:#171717;
+}
+#project02 .project-story-details { background:#222; color:#f5f5f5; border-color:#666; }
+:is(#project02,#project03) .project-story-details > summary {
+  display:flex; align-items:center; gap:18px; list-style:none;
+  min-height:84px; padding:20px 24px; box-sizing:border-box;
+  font-size:clamp(18px,1.7vw,23px); font-weight:700; line-height:1.5;
+  letter-spacing:-.025em; cursor:pointer; border-radius:11px;
+  transition:background-color .2s ease;
+}
+:is(#project02,#project03) .project-story-details > summary::-webkit-details-marker { display:none; }
+:is(#project02,#project03) .project-story-details > summary::before {
+  content:'?'; flex:0 0 44px; width:44px; height:44px;
+  display:grid; place-items:center; border-radius:50%;
+  font:700 26px/1 Georgia,serif; color:#fff; border:1px solid #555;
+  background-color:#262626;
+  background-image:linear-gradient(110deg,transparent 35%,rgba(255,255,255,.55) 49%,transparent 63%);
+  background-size:300% 100%; background-position:100% 0;
+  animation:planning-question-shimmer 5.5s ease-in-out infinite;
+}
+#project02 .project-story-details > summary::before {
+  color:#171717; border-color:#eee; background-color:#e6e6e2;
+  background-image:linear-gradient(110deg,transparent 35%,#fff 49%,transparent 63%);
+}
+:is(#project02,#project03) .project-story-details > summary::after {
+  content:'+'; margin-left:auto; flex:0 0 24px; text-align:center;
+  font-size:28px; font-weight:400;
+}
+:is(#project02,#project03) .project-story-details[open] > summary::after { content:'−'; }
+:is(#project02,#project03) .project-story-details[open] > summary::before { animation:none; }
+:is(#project02,#project03) .project-story-details > summary:hover { background:#00000008; }
+#project02 .project-story-details > summary:hover { background:#ffffff0c; }
+:is(#project02,#project03) .project-story-details > summary:focus-visible { outline:2px solid currentColor; outline-offset:5px; }
+:is(#project02,#project03) .project-story-details .operation-story { margin:12px 24px 28px; }
+@keyframes planning-question-shimmer {
+  0%,68% { background-position:100% 0; }
+  88%,100% { background-position:0% 0; }
+}
+@media(max-width:600px) {
+  :is(#project02,#project03) .project-story-details > summary { gap:12px; padding:18px 16px; font-size:18px; }
+  :is(#project02,#project03) .project-story-details > summary::before { flex-basis:38px; width:38px; height:38px; font-size:24px; }
+  :is(#project02,#project03) .project-story-details .operation-story { margin:12px 16px 24px; }
+}
+@media(prefers-reduced-motion:reduce) {
+  :is(#project02,#project03) .project-story-details > summary::before { animation:none; }
+  :is(#project02,#project03) .project-story-details > summary { transition:none; }
+}
